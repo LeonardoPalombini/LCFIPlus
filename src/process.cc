@@ -59,6 +59,9 @@ void PrimaryVertexFinder::init(Parameters* param) {
   _priVtxCfg->maxD0Err = param->get("PrimaryVertexFinder.TrackMaxD0Err", .1);
   _priVtxCfg->maxZ0Err = param->get("PrimaryVertexFinder.TrackMaxZ0Err", .1);
 
+  _priVtxCfg->minD0Z0Sig = param->get("PrimaryVertexFinder.TrackMinD0Z0Sig", 0.);
+  _priVtxCfg->maxD0Z0Sig = param->get("PrimaryVertexFinder.TrackMaxD0Z0Sig", 99999999.);
+
 //removed bc detector geometry does not correspond
   //_priVtxCfg->minVtxPlusFtdHits = param->get("PrimaryVertexFinder.TrackMinVtxFtdHits", 1);
   //_priVtxCfg->minTpcHits = param->get("PrimaryVertexFinder.TrackMinTpcHits", 999999);
@@ -132,6 +135,9 @@ void BuildUpVertex::init(Parameters* param) {
 
   _secVtxCfg->maxD0Err = param->get("BuildUpVertex.TrackMaxD0Err", .1);
   _secVtxCfg->maxZ0Err = param->get("BuildUpVertex.TrackMaxZ0Err", .1);
+
+  _secVtxCfg->minD0Z0Sig = param->get("BuildUpVertex.TrackMinD0Z0Sig", 0.);
+  _secVtxCfg->maxD0Z0Sig = param->get("BuildUpVertex.TrackMaxD0Z0Sig", 99999999.);
 
 //removed bc detector geometry does not correspond
 //  _secVtxCfg->minTpcHits = param->get("BuildUpVertex.TrackMinTpcHits", 999999);
