@@ -141,11 +141,24 @@ class TrackSelector {
       return false;
     }
 
-    if (sqrt(d0sig * d0sig + z0sig * z0sig) < cfg.minD0Z0Sig) {
+    //default has wrong eval of the uncertainty -> must consider covariance!
+    float d0 = trk->getD0();
+    z0 = (ip ? trk->getZ0() - ip->getZ() : trk->getZ0() );
+    float errd02 = trk->getCovMatrix()[tpar::d0d0];
+    float errz02 = trk->getCovMatrix()[tpar::z0z0];
+    float covd0z0 = trk->getCovMatrix()[tpar::d0z0];
+    float r0 = sqrt(d0*d0 + z0*z0);
+    float errR0 = sqrt( (d0*d0*errd02 + z0*z0*errz02 + 2*d0*z0*covd0z0)/pow(r0,2) );
+    if(std::isnan(errR0)){
+      errR0 = 999999.;
+      if(verboseDebug) std::cout << "Negative sqrt argument from R0 uncertainty !!" << std::endl;
+    }
+
+    if (r0/errR0 < cfg.minD0Z0Sig) {
       if(verboseDebug) std::cout << "MinD0Z0Sig: " << sqrt(d0sig * d0sig + z0sig * z0sig) << " / " << cfg.minD0Z0Sig << std::endl;
       return false;
     }
-    if (sqrt(d0sig * d0sig + z0sig * z0sig) > cfg.maxD0Z0Sig) {
+    if (r0/errR0 > cfg.maxD0Z0Sig) {
       if(verboseDebug) std::cout << "MaxD0Z0Sig: " << sqrt(d0sig * d0sig + z0sig * z0sig) << " / " << cfg.maxD0Z0Sig << std::endl;
       return false;
     }
