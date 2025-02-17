@@ -155,11 +155,11 @@ class TrackSelector {
     }
 
     if (r0/errR0 < cfg.minD0Z0Sig) {
-      if(verboseDebug) std::cout << "MinD0Z0Sig: " << sqrt(d0sig * d0sig + z0sig * z0sig) << " / " << cfg.minD0Z0Sig << std::endl;
+      if(verboseDebug) std::cout << "MinD0Z0Sig: " << r0/errR0 << " / " << cfg.minD0Z0Sig << std::endl;
       return false;
     }
     if (r0/errR0 > cfg.maxD0Z0Sig) {
-      if(verboseDebug) std::cout << "MaxD0Z0Sig: " << sqrt(d0sig * d0sig + z0sig * z0sig) << " / " << cfg.maxD0Z0Sig << std::endl;
+      if(verboseDebug) std::cout << "MaxD0Z0Sig: " << r0/errR0 << " / " << cfg.maxD0Z0Sig << std::endl;
       return false;
     }
 
