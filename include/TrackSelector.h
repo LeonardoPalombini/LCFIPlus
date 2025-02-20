@@ -41,6 +41,12 @@ class TrackSelectorConfig {
   double minR0;
   double maxR0;
 
+  //JET CONE SELECTOR
+  double jEta;
+  double jPhi;
+  double coneR;
+  bool useJetDirection;
+
   TrackSelectorConfig() {
     minD0 = 0.;
     maxD0 = 1e+300;
@@ -62,6 +68,12 @@ class TrackSelectorConfig {
     //added
     minR0 = 0.;
     maxR0 = 1e+300;
+
+    //jet
+    jEta = -999999.;
+    jPhi = -999999.;
+    coneR = 0.5;
+    useJetDirection = true;
 
     //put to zero bc tracker geometry is different
     minTpcHits = 0;
@@ -86,6 +98,18 @@ class TrackSelector {
   }
 
   bool passesCut(const Track* trk, const TrackSelectorConfig& cfg, const Vertex* ip = 0) {
+
+    // choose only jet cone direction
+    double trkPhi = trk->getPhi();
+    double trkTh = 0.5 * 3.14159 - atan(trk->getTanLambda());
+    double trkEta = -std::log( tan( 0.5*trkTh ) );
+    double minPhi2 = min( pow(trkPhi-cfg.jPhi, 2), pow( abs(trkPhi-cfg.jPhi) - 2.*3.14159 , 2) );
+    double dR = sqrt( minPhi2 + pow(trkEta-cfg.jEta, 2) );
+
+    if( dR > cfg.coneR && cfg.useJetDirection ){
+      if(verboseDebug) std::cout << "Outside Jet selection: " << dR << " / " << cfg.coneR << std::endl;
+      return false;
+    }
 
     // AND cuts
     if (fabs(trk->getD0()) < cfg.minD0) {
